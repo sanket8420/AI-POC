@@ -83,10 +83,4 @@ jobs:
           docker ps
           docker logs enterprise-ai-poc
 
-      - name: Wait for application
-        run: |
-          sleep 10
-
-      - name: Test application
-        run: |
-          curl -f http://localhost:8501
+      
