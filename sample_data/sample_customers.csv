@@ -1,0 +1,6 @@
+customer_id,name,email,signup_date,plan
+1001,Acme Corp,contact@acme.com,2024-01-15,Enterprise
+1002,Globex Inc,info@globex.com,2024-02-20,Pro
+1003,,missing_name@nowhere.com,2024-03-01,Basic
+1004,Initech,admin@initech.com,,Pro
+1005,Umbrella LLC,ops@umbrella.com,2024-04-10,Enterprise

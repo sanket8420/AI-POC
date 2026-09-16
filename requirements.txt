@@ -1,0 +1,14 @@
+streamlit>=1.32
+pandas>=2.0
+requests>=2.31
+pymupdf>=1.23
+sqlalchemy>=2.0
+boto3>=1.34
+
+# Optional -- only needed for OCR fallback on scanned/image-only PDF pages.
+# The app runs fine without these; OCR is skipped gracefully if missing.
+# Also requires the tesseract SYSTEM binary (not installed via pip):
+#   Linux:   apt install tesseract-ocr
+#   macOS:   brew install tesseract
+pytesseract>=0.3.10
+pillow>=10.0
