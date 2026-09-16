@@ -42,24 +42,3 @@ jobs:
             ${{ steps.meta.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
 
-  deploy:
-    needs: push-image
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH into EC2 and redeploy the container
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-            docker pull ${{ needs.push-image.outputs.image_tag }}
-            docker stop enterprise-ai-poc || true
-            docker rm enterprise-ai-poc || true
-            docker run -d \
-              --name enterprise-ai-poc \
-              --restart unless-stopped \
-              -p 8501:8501 \
-              ${{ needs.push-image.outputs.image_tag }}
-
