@@ -54,39 +54,39 @@ jobs:
 
 
   deploy:
-  needs: push-image
-  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-  runs-on: ubuntu-latest
+    needs: push-image
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Set image tag
-      run: |
-        echo "IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/enterprise-ai-poc:${{ github.sha }}" >> "$GITHUB_ENV"
+    steps:
+      - name: Set image tag
+        run: |
+          echo "IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/enterprise-ai-poc:${{ github.sha }}" >> "$GITHUB_ENV"
 
-    - name: Show image
-      run: |
-        echo "Pulling image: $IMAGE"
+      - name: Show image
+        run: |
+          echo "Pulling image: $IMAGE"
 
-    - name: Pull image
-      run: |
-        docker pull "$IMAGE"
+      - name: Pull image
+        run: |
+          docker pull "$IMAGE"
 
-    - name: Run container
-      run: |
-        docker run -d \
-          --name enterprise-ai-poc \
-          -p 8501:8501 \
-          "$IMAGE"
+      - name: Run container
+        run: |
+          docker run -d \
+            --name enterprise-ai-poc \
+            -p 8501:8501 \
+            "$IMAGE"
 
-    - name: Check container
-      run: |
-        docker ps
-        docker logs enterprise-ai-poc
+      - name: Check container
+        run: |
+          docker ps
+          docker logs enterprise-ai-poc
 
-    - name: Wait for application
-      run: |
-        sleep 10
+      - name: Wait for application
+        run: |
+          sleep 10
 
-    - name: Test application
-      run: |
-        curl -f http://localhost:8501
+      - name: Test application
+        run: |
+          curl -f http://localhost:8501
