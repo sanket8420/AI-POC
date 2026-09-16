@@ -10,29 +10,39 @@ env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/enterprise-ai-poc
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Docker build
-        run: docker build -t ai-poc-img .
+        run: |
+          docker build -t ai-poc-img .
 
   push-image:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+
     outputs:
       image_tag: ${{ steps.meta.outputs.tag }}
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Set image tag
         id: meta
-        run: echo "tag=${{ env.IMAGE_NAME }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "tag=${{ env.IMAGE_NAME }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -42,3 +52,33 @@ jobs:
             ${{ steps.meta.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
 
+
+  deploy:
+    needs: push-image
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull image
+        run: |
+          docker pull ${{ needs.push-image.outputs.image_tag }}
+
+      - name: Run container
+        run: |
+          docker run -d \
+            --name enterprise-ai-poc \
+            -p 8501:8501 \
+            ${{ needs.push-image.outputs.image_tag }}
+
+      - name: Check container
+        run: |
+          docker ps
+          docker logs enterprise-ai-poc
+
+      - name: Wait for application
+        run: |
+          sleep 10
+
+      - name: Test application
+        run: |
+          curl -f http://localhost:8501 || exit 1
