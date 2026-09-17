@@ -26,7 +26,7 @@ SAMPLE_PDF = os.path.join("sample_data", "sample_invoice.pdf")
 
 st.set_page_config(page_title="Enterprise AI Data Integration POC", layout="wide")
 
-st.title("🔌 Enterprise AI Data Integration — POC")
+st.title("🔌 Enterprise AI Data Integration — POC BY SANKET JADHAV")
 st.caption(
     "Data Sources → Ingestion & Connector Layer → Document Intelligence → AI-ready data"
 )
