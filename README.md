@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# Enterprise AI Data Integration — POC
+# Enterprise AI Data Integration — POC By Sanket
 
 A modular proof-of-concept covering **Data Sources**, the **Ingestion &
 Connector Layer**, and **Document Intelligence**, with a Streamlit UI for
